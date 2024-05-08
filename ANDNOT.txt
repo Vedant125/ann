@@ -1,0 +1,19 @@
+import numpy as np
+def and_not(inputs,weights):
+    print('ANDNOT Truth Table')
+    print()
+    
+    print('X1\tX2\t Y')
+    print('------------------')
+    
+    for i in inputs:
+        # weighted_sum = i[0]*weights[0] + i[1]*weights[1]
+        weighted_sum = np.dot(i[0] , weights[0]) + np.dot(i[1] , weights[1])
+        if weighted_sum >=1 :
+            print(i[0],"\t",i[1],"\t",1)
+        else : 
+            print(i[0],"\t",i[1],"\t",0)
+
+inputs = [[0,0],[0,1],[1,0],[1,1]]
+weights = [1,-1]
+and_not(inputs,weights)

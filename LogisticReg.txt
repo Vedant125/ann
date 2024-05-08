@@ -1,0 +1,31 @@
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from tensorflow.keras.layers import Dense
+from tensorflow.keras import Sequential
+
+data = load_breast_cancer()
+
+X_train, X_test, y_train, y_test = train_test_split(data.data , data.target , test_size=0.25, random_state=42)
+
+X_train.shape , X_test.shape , y_train.shape , y_test.shape
+
+X_train
+
+st = StandardScaler()
+X_train = st.fit_transform(X_train)
+X_test = st.fit_transform(X_test)
+
+model = Sequential()
+model.add(Dense(128,activation='relu' ,  input_shape = (30,)))
+model.add(Dense(1,activation='sigmoid'))
+
+model.summary()
+
+model.compile(loss='binary_crossentropy' , optimizer = 'adam' , metrics = ['accuracy'])
+
+model.fit(X_train,y_train , epochs=10 , validation_data=(X_test,y_test))
+
+loss , accuracy = model.evaluate(X_test,y_test)
+print('Test Loss : ',loss)
+print('Test Accuracy : ',accuracy)

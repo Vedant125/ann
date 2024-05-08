@@ -1,0 +1,24 @@
+from tensorflow.keras.datasets import mnist
+from tensorflow.keras.layers import Dense , Flatten
+from tensorflow.keras import Sequential
+import matplotlib.pyplot as plt
+
+plt.imshow(x_train[0], cmap='gray')  # Display in grayscale
+plt.title(f"Label: {y_train[0]}")  # Display the corresponding label
+plt.show()
+
+x_train.shape , y_train.shape , x_test.shape , y_test.shape
+
+model = Sequential()
+model.add(Flatten(input_shape  = (28,28)))
+model.add(Dense(128,activation='relu'))
+model.add(Dense(64,activation='relu'))
+model.add(Dense(10,activation='softmax'))
+
+model.summary()
+
+model.compile(loss='sparse_categorical_crossentropy' , optimizer = 'Adam' , metrics=['accuracy'])
+
+loss , accuracy = model.evaluate(x_test , y_test)
+print('Test Loss : ',loss)
+print('Test Acuuracy : ',accuracy)

@@ -1,0 +1,39 @@
+import numpy as np
+
+# Define the 4 vectors to be stored in the Hopfield Network
+vectors = np.array([[1, 1, -1, -1],
+                    [-1, -1, 1, 1],
+                    [1, -1, 1, -1],
+                    [-1, 1, -1, 1]])
+
+# Initialize the weight matrix
+num_neurons = vectors.shape[1]
+weights = np.zeros((num_neurons, num_neurons))
+
+# Calculate the weights using Hebbian learning
+for vector in vectors:
+    outer_product = np.outer(vector, vector)  # Outer product for Hebbian learning
+    weights += outer_product
+
+# Set the diagonal to 0 (no self-connections)
+np.fill_diagonal(weights, 0)
+
+# Define the activation function
+def activation(x):
+    return np.where(x >= 0, 1, -1)
+
+# Define the Hopfield network function
+def hopfield(input_vector, weights, iterations=10):
+    # Iteratively update the network to reach a stable state
+    for _ in range(iterations):
+        output_vector = activation(np.dot(weights, input_vector))
+    return output_vector
+
+# Test the Hopfield Network with one of the stored vectors as input
+input_vector = np.array([1, -1, 1, -1])  # Example of an initial input
+output_vector = hopfield(input_vector, weights)
+
+print("Input vector:")
+print(input_vector)
+print("Output vector after Hopfield network:")
+print(output_vector)

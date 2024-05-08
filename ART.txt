@@ -1,0 +1,58 @@
+import numpy as np
+
+def initialize_weights(input_dim):
+    # Initialize weights uniformly and normalize
+    weights = np.ones(input_dim) / input_dim
+    return weights
+
+def calculate_similarity(input_pattern, weights):
+    # Calculate similarity as the normalized dot product (cosine similarity)
+    return np.minimum(input_pattern, weights).sum() / np.sum(input_pattern)
+
+def update_weights(input_pattern, weights, learning_rate=0.1):
+    # Update weights using the weighted geometric mean
+    return (learning_rate * np.minimum(input_pattern, weights) +
+            (1 - learning_rate) * weights)
+
+def ART_neural_network(input_patterns, vigilance, learning_rate=0.1):
+    num_patterns, input_dim = input_patterns.shape
+    categories = []
+
+    for pattern in input_patterns:
+        matched_category = None
+        # Check existing categories for a match
+        for category in categories:
+            similarity = calculate_similarity(pattern, category["weights"])
+            if similarity >= vigilance:
+                matched_category = category
+                break
+
+        if matched_category is None:
+            # Create a new category if none matched
+            weights = initialize_weights(input_dim)
+            matched_category = {"weights": weights, "patterns": []}
+            categories.append(matched_category)
+
+        # Add the pattern to the matched category
+        matched_category["patterns"].append(pattern)
+        # Update the category's weights with the new pattern
+        matched_category["weights"] = update_weights(
+            pattern, matched_category["weights"], learning_rate)
+
+    return categories
+
+# Example usage
+input_patterns = np.array([[1, 0, 1, 0], [0, 1, 0, 1], [1, 1, 1, 0]])
+vigilance = 0.8
+
+categories = ART_neural_network(input_patterns, vigilance)
+
+# Display the learned categories
+for i, category in enumerate(categories):
+    print(f"Category {i+1}:")
+    print("Patterns:")
+    for pattern in category["patterns"]:
+        print(pattern)
+    print("Weights:")
+    print(category["weights"])
+    print()
